@@ -147,4 +147,4 @@ Differential testing is a well-established technique. difftest packages it into 
 
 ---
 
-Built by [Naledi Madisa](https://github.com/nalediym).
+Built by [Naledi](https://github.com/nalediym).
