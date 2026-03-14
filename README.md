@@ -10,37 +10,9 @@ You rewrote something — a function, a service, an entire codebase. Maybe you d
 
 difftest runs two programs with the same inputs and compares their outputs. If they match, the rewrite is behaviorally equivalent. If they don't, you see exactly where they diverge.
 
-```
-$ difftest ./old-server ./new-server
-
-difftest  comparing two programs
-
-  A (oracle):     ./old-server
-  B (candidate):  ./new-server
-
-  Running 7 test cases...
-
-  PASS  (no args)
-  PASS  hello
-  PASS  Hello, World!
-  PASS
-  PASS  42
-  PASS  -1
-  PASS  a b c
-
-  ✓ 7/7 passed — programs are behaviorally equivalent
-```
-
-When things diverge, you see the diff:
-
-```
-  FAIL  hello
-        stdout:
-          -Hello, hello!
-          +Hi, hello!
-          -Your name has 2 vowels.
-          +Your name has 4 vowels.
-```
+<p align="center">
+  <img src="demo/hero.gif" alt="difftest demo" width="800">
+</p>
 
 ## Install
 
