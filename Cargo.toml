@@ -1,0 +1,10 @@
+[package]
+name = "difftest"
+version = "0.1.0"
+edition = "2024"
+description = "Differential testing CLI — run two programs with the same inputs, compare outputs"
+license = "MIT"
+repository = "https://github.com/nalediym/difftest"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
