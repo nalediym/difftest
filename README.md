@@ -48,6 +48,9 @@ difftest ./old ./new --stderr
 
 # Quiet mode — just pass/fail, no diffs
 difftest ./old ./new -q
+
+# Set a timeout (default: 30s) — kills programs that hang
+difftest ./old ./new --timeout 10
 ```
 
 ## What it compares
@@ -59,6 +62,7 @@ For each input, difftest runs both programs and checks three things:
 | **stdout** | Always compared | — |
 | **exit code** | Always compared | — |
 | **stderr** | Ignored | `--stderr` |
+| **timeout** | 30 seconds | `--timeout N` |
 
 If all checks match: **PASS**. If any differ: **FAIL** with a line-by-line diff.
 
@@ -81,6 +85,36 @@ Extract capabilities from a binary with [Ursula](https://github.com/nalediym/urs
 ```bash
 ursula extract /usr/bin/wc
 difftest /usr/bin/wc ./wc.shell/target/debug/wc
+```
+
+## Library usage
+
+difftest is also a Rust library. Add it to your `Cargo.toml`:
+
+```toml
+[dependencies]
+difftest = "0.2"
+```
+
+Then use it programmatically:
+
+```rust
+use difftest::{run_pair, InputSource, RunResult};
+use std::time::Duration;
+
+let input = InputSource::Args(vec!["hello".into()]);
+let timeout = Duration::from_secs(30);
+
+match run_pair("./old", "./new", &input, false, timeout) {
+    RunResult::Pass { label } => println!("{label}: identical"),
+    RunResult::Fail { label, stdout_diff, .. } => {
+        println!("{label}: diverged");
+        if let Some(diff) = stdout_diff {
+            print!("{diff}");
+        }
+    }
+    RunResult::Error { label, message } => eprintln!("{label}: {message}"),
+}
 ```
 
 ## How it works
@@ -139,7 +173,20 @@ Differential testing is a well-established technique. difftest packages it into 
 - **Zero config** — no YAML, no TOML, no setup. Two arguments and go.
 - **Language agnostic** — compares programs, not code. Python vs Rust? Fine.
 - **CI friendly** — exit codes, quiet mode, structured output.
-- **Minimal dependencies** — just `clap` for arg parsing. ~500 lines of Rust.
+- **Minimal dependencies** — `clap` for arg parsing, `libc` for process timeout. ~500 lines of Rust.
+
+## Development
+
+```bash
+# Run the full quality gauntlet (check, fmt, clippy, test, doc, wasm32)
+bin/test-lane
+
+# Quick mode (check + test only)
+bin/test-lane --quick
+
+# Verify the library compiles to WebAssembly
+bin/test-lane --wasm
+```
 
 ## License
 
@@ -147,4 +194,4 @@ Differential testing is a well-established technique. difftest packages it into 
 
 ---
 
-Built by [Naledi](https://github.com/nalediym).
+Built by [Naledi](https://github.com/nalediym). See [CHANGELOG](CHANGELOG.md) for release history.
