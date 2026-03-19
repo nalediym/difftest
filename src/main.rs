@@ -1,8 +1,7 @@
-mod runner;
-
 use clap::Parser;
-use runner::{InputSource, RunResult};
+use difftest::{shell_words, InputSource, RunResult};
 use std::process::ExitCode;
+use std::time::Duration;
 
 #[derive(Parser)]
 #[command(
@@ -33,10 +32,15 @@ struct Cli {
     /// Suppress diff output, only show pass/fail summary
     #[arg(long, short)]
     quiet: bool,
+
+    /// Timeout in seconds for each program invocation (default: 30)
+    #[arg(long, default_value = "30")]
+    timeout: u64,
 }
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
+    let timeout = Duration::from_secs(cli.timeout);
 
     // Header
     eprintln!(
@@ -81,7 +85,7 @@ fn main() -> ExitCode {
     // Run tests
     let results: Vec<RunResult> = inputs
         .iter()
-        .map(|input| runner::run_pair(&cli.program_a, &cli.program_b, input, cli.stderr))
+        .map(|input| difftest::run_pair(&cli.program_a, &cli.program_b, input, cli.stderr, timeout))
         .collect();
 
     // Print results
@@ -172,42 +176,4 @@ fn main() -> ExitCode {
     } else {
         ExitCode::SUCCESS
     }
-}
-
-/// Simple word splitting on spaces (respects quotes).
-fn shell_words(s: &str) -> Vec<String> {
-    let trimmed = s.trim();
-    if trimmed.is_empty() {
-        return vec![];
-    }
-
-    let mut words = Vec::new();
-    let mut current = String::new();
-    let mut in_quote = false;
-    let mut quote_char = ' ';
-
-    for c in trimmed.chars() {
-        if in_quote {
-            if c == quote_char {
-                in_quote = false;
-            } else {
-                current.push(c);
-            }
-        } else if c == '"' || c == '\'' {
-            in_quote = true;
-            quote_char = c;
-        } else if c == ' ' {
-            if !current.is_empty() {
-                words.push(current.clone());
-                current.clear();
-            }
-        } else {
-            current.push(c);
-        }
-    }
-    if !current.is_empty() {
-        words.push(current);
-    }
-
-    words
 }

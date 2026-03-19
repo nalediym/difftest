@@ -1,6 +1,6 @@
 [package]
 name = "difftest"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "Differential testing CLI — run two programs with the same inputs, compare outputs"
 license = "MIT"
@@ -11,5 +11,14 @@ categories = ["command-line-utilities", "development-tools::testing"]
 readme = "README.md"
 authors = ["Naledi Madisa"]
 
+[lib]
+name = "difftest"
+path = "src/lib.rs"
+
+[[bin]]
+name = "difftest"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+libc = "0.2"
