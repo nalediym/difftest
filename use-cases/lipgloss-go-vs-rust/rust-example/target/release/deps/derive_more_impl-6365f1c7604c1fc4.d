@@ -1,0 +1,9 @@
+/Users/naledi/Projects/difftest/use-cases/lipgloss-go-vs-rust/rust-example/target/release/deps/derive_more_impl-6365f1c7604c1fc4.d: /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/lib.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/utils.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/is_variant.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../README.md /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../doc/is_variant.md
+
+/Users/naledi/Projects/difftest/use-cases/lipgloss-go-vs-rust/rust-example/target/release/deps/libderive_more_impl-6365f1c7604c1fc4.dylib: /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/lib.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/utils.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/is_variant.rs /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../README.md /Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../doc/is_variant.md
+
+/Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/lib.rs:
+/Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/utils.rs:
+/Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/is_variant.rs:
+/Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../README.md:
+/Users/naledi/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/derive_more-impl-2.1.1/src/../doc/is_variant.md:
