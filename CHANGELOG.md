@@ -5,13 +5,17 @@ All notable changes to this project will be documented in this file.
 ## [0.2.0] - 2026-03-19
 
 ### Added
-- `--timeout` flag to kill programs that hang (default: 30 seconds)
-- Library API (`difftest` crate) exposing `run_pair`, `InputSource`, `RunResult`, `make_diff`, and `shell_words` for programmatic use
-- Doc comments on all public API items
+- You can now set `--timeout 10` to kill programs that hang (default: 30 seconds)
+- Use difftest as a Rust library — `run_pair()`, `InputSource`, `RunResult`, `make_diff`, and `shell_words` are all public
+- `bin/test-lane` runs the full quality gauntlet: check, fmt, clippy, test, doc, wasm32 compile, audit
 
 ### Changed
-- Restructured as lib + bin crate (was bin-only)
-- `run_pair` now takes a `Duration` timeout parameter
+- Restructured as lib + bin crate — you can now `use difftest::run_pair` in your own code
+- `run_pair` takes a `Duration` timeout parameter
+
+### For contributors
+- Doc comments on all public API items
+- Library compiles to wasm32-unknown-unknown
 
 ## [0.1.0] - 2026-03-14
 
