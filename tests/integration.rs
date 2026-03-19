@@ -16,7 +16,10 @@ fn identical_programs_pass() {
         .output()
         .unwrap();
 
-    assert!(output.status.success(), "Expected success for identical programs");
+    assert!(
+        output.status.success(),
+        "Expected success for identical programs"
+    );
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("PASS"), "Expected PASS in output");
     assert!(stderr.contains("2/2 passed"), "Expected 2/2 passed");
@@ -30,7 +33,10 @@ fn different_programs_fail() {
         .output()
         .unwrap();
 
-    assert!(!output.status.success(), "Expected failure for different programs");
+    assert!(
+        !output.status.success(),
+        "Expected failure for different programs"
+    );
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("FAIL"), "Expected FAIL in output");
 }
@@ -43,7 +49,10 @@ fn exit_code_mismatch_detected() {
         .output()
         .unwrap();
 
-    assert!(!output.status.success(), "Expected failure for exit code mismatch");
+    assert!(
+        !output.status.success(),
+        "Expected failure for exit code mismatch"
+    );
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("exit code"), "Expected exit code diff");
 }
@@ -55,9 +64,15 @@ fn smoke_tests_run_without_inputs_flag() {
         .output()
         .unwrap();
 
-    assert!(output.status.success(), "Smoke tests should pass for identical programs");
+    assert!(
+        output.status.success(),
+        "Smoke tests should pass for identical programs"
+    );
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("7/7 passed"), "Expected all 7 smoke tests to pass");
+    assert!(
+        stderr.contains("7/7 passed"),
+        "Expected all 7 smoke tests to pass"
+    );
 }
 
 #[test]
@@ -71,7 +86,10 @@ fn quiet_mode_suppresses_diff() {
 
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("FAIL"), "Should still show FAIL");
-    assert!(!stderr.contains("stdout:"), "Should not show diff details in quiet mode");
+    assert!(
+        !stderr.contains("stdout:"),
+        "Should not show diff details in quiet mode"
+    );
 }
 
 #[test]
