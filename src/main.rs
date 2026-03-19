@@ -1,5 +1,5 @@
 use clap::Parser;
-use difftest::{shell_words, InputSource, RunResult};
+use difftest::{InputSource, RunResult, shell_words};
 use std::process::ExitCode;
 use std::time::Duration;
 
@@ -43,9 +43,7 @@ fn main() -> ExitCode {
     let timeout = Duration::from_secs(cli.timeout);
 
     // Header
-    eprintln!(
-        "\n\x1b[1m\x1b[35mdifftest\x1b[0m  comparing two programs\n"
-    );
+    eprintln!("\n\x1b[1m\x1b[35mdifftest\x1b[0m  comparing two programs\n");
     eprintln!(
         "  \x1b[2mA (oracle):\x1b[0m    \x1b[36m{}\x1b[0m",
         cli.program_a
@@ -145,6 +143,7 @@ fn main() -> ExitCode {
                 errored += 1;
                 eprintln!("  \x1b[1m\x1b[33mERR \x1b[0m  {} — {}", label, message);
             }
+            _ => {}
         }
     }
 

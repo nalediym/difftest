@@ -9,6 +9,7 @@ use std::time::Duration;
 
 /// How to feed input to the programs under test.
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub enum InputSource {
     /// Pass these as CLI arguments.
     Args(Vec<String>),
@@ -18,6 +19,7 @@ pub enum InputSource {
 
 /// Result of comparing one test case across both programs.
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum RunResult {
     /// Both programs produced identical output and exit code.
     Pass {
@@ -89,7 +91,7 @@ fn run_program(
 
     let mut child = command.spawn().map_err(|e| e.to_string())?;
 
-    // Write stdin if needed
+    // Write stdin if needed — then drop the handle so the child sees EOF.
     if let Some(data) = stdin_data {
         use std::io::Write;
         if let Some(mut stdin) = child.stdin.take() {
@@ -97,46 +99,33 @@ fn run_program(
         }
     }
 
-    // Spawn a watchdog thread that kills the child if it exceeds the timeout.
-    let child_id = child.id();
-    let (done_tx, done_rx) = std::sync::mpsc::channel::<()>();
-    let timeout_thread = std::thread::spawn(move || {
-        if done_rx.recv_timeout(timeout).is_err() {
-            // Timeout elapsed and the child is still running — kill it.
-            #[cfg(unix)]
-            {
-                unsafe {
-                    libc::kill(child_id as i32, libc::SIGKILL);
+    // Poll with try_wait until the child exits or the timeout expires.
+    let poll_interval = Duration::from_millis(50);
+    let start = std::time::Instant::now();
+
+    loop {
+        match child.try_wait() {
+            Ok(Some(_status)) => {
+                // Child exited — collect output.
+                let output = child.wait_with_output().map_err(|e| e.to_string())?;
+                return Ok(ProgramOutput {
+                    stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+                    stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+                    exit_code: output.status.code().unwrap_or(-1),
+                });
+            }
+            Ok(None) => {
+                // Still running — check timeout.
+                if start.elapsed() >= timeout {
+                    let _ = child.kill();
+                    let _ = child.wait(); // reap the zombie
+                    return Err(format!("timed out after {}s", timeout.as_secs()));
                 }
+                std::thread::sleep(poll_interval);
             }
-            #[cfg(not(unix))]
-            {
-                // Fallback: use taskkill on Windows or just let wait_with_output handle it.
-                let _ = std::process::Command::new("taskkill")
-                    .args(["/PID", &child_id.to_string(), "/F"])
-                    .output();
-            }
-            true // timed out
-        } else {
-            false // completed normally
+            Err(e) => return Err(e.to_string()),
         }
-    });
-
-    let output = child.wait_with_output().map_err(|e| e.to_string())?;
-
-    // Signal the watchdog that we're done, then check if it timed out.
-    let _ = done_tx.send(());
-    let timed_out = timeout_thread.join().unwrap_or(false);
-
-    if timed_out {
-        return Err(format!("timed out after {}s", timeout.as_secs()));
     }
-
-    Ok(ProgramOutput {
-        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
-        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
-        exit_code: output.status.code().unwrap_or(-1),
-    })
 }
 
 /// Run both programs with the same input and compare their outputs.
