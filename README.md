@@ -2,7 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/difftest.svg)](https://crates.io/crates/difftest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-7%20passing-brightgreen.svg)]()
+[![CI](https://github.com/nalediym/difftest/actions/workflows/ci.yml/badge.svg)](https://github.com/nalediym/difftest/actions/workflows/ci.yml)
 
 **Differential testing for the AI rewrite era.**
 
